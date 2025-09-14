@@ -22,20 +22,14 @@ import {
   List,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { formatDistanceToNow } from "date-fns";
 import { DueDateBadge } from "./DueDateBadge";
+import { getTaskSteps } from "@/lib/constants";
 
 interface Task {
   id: string;
   title: string;
   description: string;
   dueDate?: string;
-}
-
-interface TaskStep {
-  id: string;
-  text: string;
-  completed: boolean;
 }
 
 interface TaskCardProps {
@@ -49,65 +43,6 @@ interface TaskCardProps {
   canMoveDown: boolean;
   showActions?: boolean;
 }
-
-// Static sample steps - TODO: Connect to Redux store
-const getTaskSteps = (taskId: string): TaskStep[] => {
-  const stepSamples: Record<string, TaskStep[]> = {
-    "1": [
-      {
-        id: "s1-1",
-        text: "Create folder structure on cloud storage",
-        completed: false,
-      },
-      { id: "s1-2", text: "Sort photos by year and event", completed: false },
-      {
-        id: "s1-3",
-        text: "Delete duplicates and blurry photos",
-        completed: false,
-      },
-    ],
-    "2": [
-      { id: "s2-1", text: "Read chapters 1-3", completed: true },
-      { id: "s2-2", text: "Take notes on key concepts", completed: false },
-      { id: "s2-3", text: "Write summary of main ideas", completed: false },
-    ],
-    "4": [
-      { id: "s4-1", text: "Gather Q4 performance data", completed: true },
-      { id: "s4-2", text: "Create slide outline", completed: false },
-      {
-        id: "s4-3",
-        text: "Design charts and visualizations",
-        completed: false,
-      },
-      { id: "s4-4", text: "Practice presentation timing", completed: false },
-    ],
-    "6": [
-      {
-        id: "s6-1",
-        text: "Review client requirements document",
-        completed: true,
-      },
-      {
-        id: "s6-2",
-        text: "Draft project timeline and milestones",
-        completed: true,
-      },
-      {
-        id: "s6-3",
-        text: "Create budget breakdown and pricing",
-        completed: false,
-      },
-      { id: "s6-4", text: "Write executive summary", completed: false },
-      {
-        id: "s6-5",
-        text: "Format and proofread final document",
-        completed: false,
-      },
-    ],
-  };
-
-  return stepSamples[taskId] || [];
-};
 
 export const TaskCard: React.FC<TaskCardProps> = ({
   task,
@@ -208,7 +143,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                   </div>
 
                   {/* Existing Steps */}
-                  {hasSteps && (
+                  {hasSteps ? (
                     <motion.div
                       className="space-y-2"
                       initial={{ opacity: 0 }}
@@ -256,6 +191,23 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                         </motion.div>
                       ))}
                     </motion.div>
+                  ) : (
+                    <motion.div
+                      className="flex flex-col items-center justify-center py-6 px-4"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.15, duration: 0.3 }}
+                    >
+                      <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+                        <List className="w-5 h-5 text-gray-400" />
+                      </div>
+                      <p className="text-sm text-gray-500 text-center mb-1">
+                        No steps yet
+                      </p>
+                      <p className="text-xs text-gray-400 text-center">
+                        Add your first step below to get started
+                      </p>
+                    </motion.div>
                   )}
 
                   {/* Add New Step */}
@@ -292,23 +244,21 @@ export const TaskCard: React.FC<TaskCardProps> = ({
       </CardContent>
 
       <CardFooter className="p-0">
-        {hasSteps && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="w-full h-10 text-xs text-gray-600 hover:text-gray-800 hover:bg-gray-50 border-t border-gray-100 rounded-none rounded-b-lg"
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="w-full h-10 text-xs text-gray-600 hover:text-gray-800 hover:bg-gray-50 border-t border-gray-100 rounded-none rounded-b-lg"
+        >
+          <List className="w-3 h-3 mr-1" />
+          <span>{isExpanded ? "Hide steps" : "Show steps"}</span>
+          <motion.div
+            animate={{ rotate: isExpanded ? 180 : 0 }}
+            transition={{ duration: 0.2 }}
           >
-            <List className="w-3 h-3 mr-1" />
-            <span>{isExpanded ? "Hide steps" : "Show steps"}</span>
-            <motion.div
-              animate={{ rotate: isExpanded ? 180 : 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <ArrowDown className="w-3 h-3 ml-1" />
-            </motion.div>
-          </Button>
-        )}
+            <ArrowDown className="w-3 h-3 ml-1" />
+          </motion.div>
+        </Button>
       </CardFooter>
     </Card>
   );

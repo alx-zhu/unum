@@ -54,3 +54,61 @@ export const mockSteps: Step[] = [
   { id: "s3", text: "Create budget breakdown and pricing", completed: false },
   { id: "s4", text: "Write executive summary", completed: false },
 ];
+
+export const getTaskSteps = (taskId: string): Step[] => {
+  const stepSamples: Record<string, Step[]> = {
+    "1": [
+      {
+        id: "s1-1",
+        text: "Create folder structure on cloud storage",
+        completed: false,
+      },
+      { id: "s1-2", text: "Sort photos by year and event", completed: false },
+      {
+        id: "s1-3",
+        text: "Delete duplicates and blurry photos",
+        completed: false,
+      },
+    ],
+    "2": [
+      { id: "s2-1", text: "Read chapters 1-3", completed: true },
+      { id: "s2-2", text: "Take notes on key concepts", completed: false },
+      { id: "s2-3", text: "Write summary of main ideas", completed: false },
+    ],
+    "4": [
+      { id: "s4-1", text: "Gather Q4 performance data", completed: true },
+      { id: "s4-2", text: "Create slide outline", completed: false },
+      {
+        id: "s4-3",
+        text: "Design charts and visualizations",
+        completed: false,
+      },
+      { id: "s4-4", text: "Practice presentation timing", completed: false },
+    ],
+    "6": [
+      {
+        id: "s6-1",
+        text: "Review client requirements document",
+        completed: true,
+      },
+      {
+        id: "s6-2",
+        text: "Draft project timeline and milestones",
+        completed: true,
+      },
+      {
+        id: "s6-3",
+        text: "Create budget breakdown and pricing",
+        completed: false,
+      },
+      { id: "s6-4", text: "Write executive summary", completed: false },
+      {
+        id: "s6-5",
+        text: "Format and proofread final document",
+        completed: false,
+      },
+    ],
+  };
+
+  return stepSamples[taskId] || [];
+};
