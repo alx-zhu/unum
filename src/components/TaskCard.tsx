@@ -24,6 +24,7 @@ import {
 import { cn } from "@/lib/utils";
 import { DueDateBadge } from "./DueDateBadge";
 import { getTaskSteps } from "@/lib/constants";
+import FocusableStep from "./FocusableStep";
 
 interface Task {
   id: string;
@@ -150,46 +151,37 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.15, duration: 0.2 }}
                     >
-                      {taskSteps.map((step, index) => (
-                        <motion.div
-                          key={step.id}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{
-                            delay: 0.2 + index * 0.05,
-                            duration: 0.2,
-                          }}
-                          className={cn(
-                            "flex items-start gap-2 text-sm group/step cursor-pointer rounded p-2 hover:bg-gray-100 transition-colors duration-150",
-                            {
-                              "text-gray-500": step.completed,
-                              "text-gray-700": !step.completed,
-                            }
-                          )}
-                          onClick={() => toggleStepCompletion(step.id)}
-                        >
-                          <div
-                            className={cn(
-                              "w-4 h-4 rounded border mt-0.5 flex items-center justify-center text-xs shrink-0 transition-colors",
-                              {
-                                "bg-green-600 border-green-600 text-white":
-                                  step.completed,
-                                "border-gray-300 hover:border-gray-400":
-                                  !step.completed,
+                      {taskSteps.map((step, index) => {
+                        const isNext =
+                          index === completedSteps && !step.completed;
+                        return (
+                          <motion.div
+                            key={step.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{
+                              delay: 0.2 + index * 0.05,
+                              duration: 0.2,
+                            }}
+                          >
+                            <FocusableStep
+                              step={step}
+                              isNext={isNext}
+                              onFocus={(stepId) => {
+                                // TODO: Navigate to step focus mode
+                                console.log("Focusing on step:", stepId);
+                              }}
+                              onEdit={() =>
+                                console.log("Editing step:", step.id)
                               }
-                            )}
-                          >
-                            {step.completed && "✓"}
-                          </div>
-                          <span
-                            className={`flex-1 leading-relaxed ${
-                              step.completed ? "line-through" : ""
-                            }`}
-                          >
-                            {step.text}
-                          </span>
-                        </motion.div>
-                      ))}
+                              onDelete={() =>
+                                console.log("Deleting step:", step.id)
+                              }
+                              onToggleComplete={toggleStepCompletion}
+                            />
+                          </motion.div>
+                        );
+                      })}
                     </motion.div>
                   ) : (
                     <motion.div
