@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Play, Clock, CheckCircle2 } from "lucide-react";
+import { Play, Clock, CheckCircle2, Pencil, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Step } from "@/types/tasks";
 
@@ -29,15 +29,16 @@ const FocusableStep: React.FC<FocusableStepProps> = ({
   return (
     <Card
       className={cn(
-        "group transition-all duration-200 py-3 gap-0",
+        "group/step transition-all duration-200 py-3 gap-0",
         {
           // Next step (primary focus) - matches your app's aesthetic
           "border-gray-900 shadow-sm": isNext && !step.completed,
           // Regular incomplete steps
-          "border-gray-200 hover:border-gray-300 hover:shadow-sm":
+          "bg-gray-50 border-0 shadow-none hover:border-gray-300 hover:shadow-sm":
             !isNext && !step.completed,
           // Completed steps
-          "border-gray-100 bg-gray-50 opacity-75": step.completed,
+          "border-gray-100 bg-gray-50 opacity-75 border-none shadow-none":
+            step.completed,
         },
         className
       )}
@@ -83,24 +84,53 @@ const FocusableStep: React.FC<FocusableStepProps> = ({
             )}
           </div>
 
-          {/* Focus action for incomplete steps */}
-          {!step.completed && (
-            <Button
-              variant={isNext ? "default" : "ghost"}
-              size="sm"
-              onClick={() => onFocus(step.id)}
+          <div className="flex items-center gap-4">
+            {!step.completed && (
+              <Button
+                variant={isNext ? "default" : "ghost"}
+                size="sm"
+                onClick={() => onFocus(step.id)}
+                className={cn(
+                  "opacity-0 group-hover/step:opacity-100 transition-opacity shrink-0",
+                  {
+                    "opacity-100 bg-gray-900 hover:bg-gray-800 text-white":
+                      isNext,
+                  }
+                )}
+              >
+                <Play className="w-3 h-3 mr-1" />
+                {isNext ? "Focus" : "Work on"}
+              </Button>
+            )}
+
+            <div
               className={cn(
-                "opacity-0 group-hover:opacity-100 transition-opacity shrink-0",
+                "flex items-center border-l border-gray-200 pl-2 group-hover/step:opacity-100 transition-opacity",
                 {
-                  "opacity-100 bg-gray-900 hover:bg-gray-800 text-white":
-                    isNext,
+                  "opacity-0": !isNext || step.completed,
                 }
               )}
             >
-              <Play className="w-3 h-3" />
-              {isNext ? "Focus" : "Work on"}
-            </Button>
-          )}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onEdit(step.id)}
+                className="h-7 w-7 hover:bg-gray-100"
+                title="Edit step"
+              >
+                <Pencil className="w-3 h-3" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onDelete(step.id)}
+                className="h-7 w-7 hover:bg-red-50 hover:text-red-600"
+                title="Delete step"
+              >
+                <Trash2 className="w-3 h-3" />
+              </Button>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>
