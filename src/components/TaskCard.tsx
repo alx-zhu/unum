@@ -20,6 +20,7 @@ import {
   Edit3,
   Trash2,
   List,
+  ListCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DueDateBadge } from "./DueDateBadge";
@@ -115,6 +116,19 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           )}
           <div className="flex items-center gap-2 mt-1">
             {task.dueDate && <DueDateBadge dueDate={task.dueDate} />}
+            {completedSteps > 0 ? (
+              <Badge
+                variant="secondary"
+                className="cursor-default bg-green-100 text-green-700 border-green-200 hover:bg-green-200"
+              >
+                <ListCheck /> {completedSteps}{" "}
+                {`step${completedSteps > 1 ? "s" : ""}`} completed
+              </Badge>
+            ) : (
+              <Badge variant="secondary" className="cursor-default">
+                <List /> Unstarted
+              </Badge>
+            )}
           </div>
         </CardHeader>
 
