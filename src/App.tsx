@@ -19,9 +19,14 @@ export default function App() {
   if (currentView === "focus") {
     return (
       <FocusSession
-        onExit={handleCloseFocus}
-        step={getTaskSteps("1")[0]}
-        onComplete={() => console.log("Complete current step")}
+        onClose={handleCloseFocus}
+        step={getTaskSteps("6")[3]}
+        onNextStep={() => {
+          console.log("Moving to next step");
+        }}
+        onCompleteTask={() => {
+          console.log("Completing task");
+        }}
       />
     );
   }
