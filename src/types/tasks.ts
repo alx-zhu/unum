@@ -1,8 +1,20 @@
-// Types for better structure
-export interface Task {
-  id: string;
+export type TaskIdType = string;
+
+export type StepIdType = string;
+
+export type BucketIdType = "time-sensitive" | "important" | "when-available";
+
+export interface Bucket {
+  id: BucketIdType;
   title: string;
   description: string;
+}
+
+export interface Task {
+  id: TaskIdType;
+  title: string;
+  description: string;
+  bucketId: BucketIdType;
   dueDate?: string;
   // createdAt: string;
   // completed: boolean;
@@ -11,11 +23,11 @@ export interface Task {
 }
 
 export interface Step {
-  id: string;
+  id: StepIdType;
   text: string;
   completed: boolean;
-  // createdAt: string;
-  // updatedAt?: string;
-  // completedAt?: string;
-  // taskId: string;
+  createdAt: string;
+  updatedAt?: string;
+  completedAt?: string;
+  taskId: TaskIdType;
 }
