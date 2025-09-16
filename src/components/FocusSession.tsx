@@ -16,7 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import type { Task, Step } from "@/types/tasks";
 import { mockTasks } from "@/lib/constants";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface FocusSessionProps {
   step: Step;
@@ -126,7 +126,12 @@ const FocusSession: React.FC<FocusSessionProps> = ({
       </motion.div>
 
       {/* Main Content */}
-      <div className="max-w-2xl mx-auto px-6 py-8">
+      <motion.div
+        className="max-w-2xl mx-auto px-6 py-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3, ease: "easeIn" }}
+      >
         {/* Current Step */}
         <Card className="mb-8">
           <CardHeader>
@@ -181,37 +186,51 @@ const FocusSession: React.FC<FocusSessionProps> = ({
             />
 
             {/* Notes Archive */}
-            {showNotesArchive && (
-              <>
-                <Separator className="my-4" />
-                <div className="space-y-3">
-                  <h4 className="text-xs font-medium text-gray-600 uppercase tracking-wide">
-                    Previous Session Notes
-                  </h4>
-                  {previousNotes.length > 0 ? (
-                    <div className="space-y-2">
-                      {previousNotes.map((note) => (
-                        <div
-                          key={note.id}
-                          className="p-3 bg-gray-50 border border-gray-100 rounded-md"
-                        >
-                          <div className="text-xs text-gray-500 mb-1">
-                            {note.timestamp}
-                          </div>
-                          <p className="text-sm text-gray-700 leading-relaxed">
-                            {note.content}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-gray-500 text-center py-4">
-                      No previous notes for this task
-                    </p>
-                  )}
-                </div>
-              </>
-            )}
+            <AnimatePresence initial={false}>
+              {showNotesArchive && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
+                  className="overflow-hidden "
+                >
+                  <Separator className="my-6" />
+                  <div className="space-y-3">
+                    <h4 className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                      Previous Session Notes
+                    </h4>
+                    {previousNotes.length > 0 ? (
+                      <div className="space-y-2">
+                        {previousNotes.map((note, index) => (
+                          <motion.div
+                            key={note.id}
+                            className="p-3 bg-gray-50 border border-gray-100 rounded-md"
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{
+                              delay: 0.15 + index * 0.05,
+                              duration: 0.2,
+                            }}
+                          >
+                            <div className="text-xs text-gray-500 mb-1">
+                              {note.timestamp}
+                            </div>
+                            <p className="text-sm text-gray-700 leading-relaxed">
+                              {note.content}
+                            </p>
+                          </motion.div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-gray-500 text-center py-4">
+                        No previous notes for this task
+                      </p>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </CardContent>
         </Card>
 
@@ -233,7 +252,7 @@ const FocusSession: React.FC<FocusSessionProps> = ({
             Complete Step
           </Button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
