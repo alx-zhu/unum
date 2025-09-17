@@ -1,5 +1,5 @@
 // src/components/notes/SessionNotes.tsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ChevronDown } from "lucide-react";
@@ -26,6 +26,7 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasInput, setHasInput] = useState(false);
+  const noteInputRef = useRef<HTMLTextAreaElement>(null);
 
   // Group notes by current step vs other steps
   const groupedNotes: NotesGroupType[] = React.useMemo(() => {
@@ -71,10 +72,8 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
       if ((event.metaKey || event.ctrlKey) && event.key === "k") {
         console.log("Focusing quick note input");
         event.preventDefault();
-        const quickInput = document.querySelector(
-          "[data-quick-input]"
-        ) as HTMLTextAreaElement;
-        quickInput?.focus();
+        noteInputRef.current?.focus();
+        setIsExpanded(true);
       }
     };
 
@@ -109,9 +108,10 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
         {/* Quick Input - Always Visible */}
         <div className="p-4 border-b border-gray-100 bg-white">
           <QuickNoteInput
+            ref={noteInputRef}
             onSave={onCreateNote}
             onInputChange={setHasInput}
-            autoFocus={true}
+            autoFocus
           />
         </div>
       </CardHeader>

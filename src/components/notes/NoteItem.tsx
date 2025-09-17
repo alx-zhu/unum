@@ -86,7 +86,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
         onInput={(e) => setContent(e.currentTarget.textContent || "")}
         className={cn(
           "text-sm text-gray-700 leading-relaxed min-h-5 outline-none",
-          isEditing && "bg-white p-2 border border-gray-200 rounded "
+          isEditing && "bg-white p-2 border border-gray-200 rounded"
         )}
       >
         {content}

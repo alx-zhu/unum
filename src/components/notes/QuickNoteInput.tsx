@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 interface QuickNoteInputProps {
+  ref: React.RefObject<HTMLTextAreaElement | null>;
   onSave: (content: string) => void;
   onInputChange: (hasContent: boolean) => void;
   placeholder?: string;
@@ -11,19 +12,19 @@ interface QuickNoteInputProps {
 }
 
 const QuickNoteInput: React.FC<QuickNoteInputProps> = ({
+  ref,
   onSave,
   onInputChange,
   placeholder = "Capture a quick thought...",
   autoFocus = false,
 }) => {
   const [content, setContent] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (autoFocus && textareaRef.current) {
-      textareaRef.current.focus();
+    if (autoFocus && ref.current) {
+      ref.current.focus();
     }
-  }, [autoFocus]);
+  }, [autoFocus, ref]);
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
@@ -51,8 +52,8 @@ const QuickNoteInput: React.FC<QuickNoteInputProps> = ({
       onInputChange(false);
 
       // Reset height
-      if (textareaRef.current) {
-        textareaRef.current.style.height = "auto";
+      if (ref.current) {
+        ref.current.style.height = "auto";
       }
     }
   };
@@ -60,7 +61,7 @@ const QuickNoteInput: React.FC<QuickNoteInputProps> = ({
   return (
     <div className="space-y-2">
       <Textarea
-        ref={textareaRef}
+        ref={ref}
         value={content}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}

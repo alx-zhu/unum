@@ -1,7 +1,7 @@
 // src/components/notes/NotesGroup.tsx
 import React from "react";
 import NoteItem from "./NoteItem";
-import type { NotesGroup as NotesGroupType, SessionNote } from "@/types/notes";
+import type { NotesGroup as NotesGroupType } from "@/types/notes";
 
 interface NotesGroupProps {
   group: NotesGroupType;

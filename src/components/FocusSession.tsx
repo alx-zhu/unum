@@ -4,10 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { X, Clock, CheckCircle2, Pause } from "lucide-react";
-import { cn } from "@/lib/utils";
 import type { Task, Step } from "@/types/tasks";
 import { mockTasks } from "@/lib/constants";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import type { SessionNote } from "@/types/notes";
 import SessionNotes from "./notes/SessionNotes";
 
