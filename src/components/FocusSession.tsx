@@ -3,20 +3,13 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import {
-  X,
-  Clock,
-  CheckCircle2,
-  FileText,
-  ChevronDown,
-  ChevronUp,
-  Pause,
-} from "lucide-react";
+import { X, Clock, CheckCircle2, Pause } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Task, Step } from "@/types/tasks";
 import { mockTasks } from "@/lib/constants";
 import { AnimatePresence, motion } from "framer-motion";
+import type { SessionNote } from "@/types/notes";
+import SessionNotes from "./notes/SessionNotes";
 
 interface FocusSessionProps {
   step: Step;
@@ -25,57 +18,76 @@ interface FocusSessionProps {
   onCompleteTask: () => void;
 }
 
-interface FocusSessionNote {
-  id: string;
-  content: string;
-  timestamp: string;
-  stepId: string;
-}
-
 const FocusSession: React.FC<FocusSessionProps> = ({
   step,
   onClose,
   onNextStep,
   onCompleteTask,
 }) => {
-  const [currentNotes, setCurrentNotes] = useState("");
-  const [showNotesArchive, setShowNotesArchive] = useState(false);
   const task: Task = mockTasks[5];
-
-  // Mock previous notes data
-  const previousNotes: FocusSessionNote[] = [
+  const [notes, setNotes] = useState<SessionNote[]>([
+    // Mock data - replace with your actual data source
     {
       id: "n1",
       content:
-        "Client mentioned they want the timeline to be more aggressive. Need to discuss resource allocation.",
-      timestamp: "2 hours ago",
-      stepId: "s6-1",
+        "Competitor A charges $99/month but lacks advanced analytics. This could be our key differentiator.",
+      timestamp: "2 minutes ago",
+      stepId: step.id, // Assuming step has an id property
+      createdAt: new Date(Date.now() - 2 * 60 * 1000),
     },
     {
       id: "n2",
       content:
-        "Found the template from last quarter's proposal. Can reuse the structure and update numbers.",
-      timestamp: "Yesterday",
-      stepId: "s6-2",
+        "Found pricing page: https://competitor-a.com/pricing - need to analyze their tiers",
+      timestamp: "5 minutes ago",
+      stepId: step.id,
+      createdAt: new Date(Date.now() - 5 * 60 * 1000),
     },
-  ];
+    {
+      id: "n3",
+      content:
+        "Client mentioned they want aggressive timeline. Need to factor this into pricing strategy.",
+      timestamp: "Yesterday",
+      stepId: "s6-1", // Different step ID
+      stepName: "Client Discovery",
+      createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
+    },
+  ]);
+
+  // Add these handler functions:
+  const handleCreateNote = (content: string) => {
+    const newNote: SessionNote = {
+      id: `note-${Date.now()}`,
+      content,
+      timestamp: "Just now",
+      stepId: step.id, // Current step ID
+      createdAt: new Date(),
+    };
+
+    setNotes((prev) => [newNote, ...prev]);
+
+    // TODO: Save to your backend/storage
+    console.log("Creating note:", newNote);
+  };
+
+  const handleUpdateNote = (id: string, content: string) => {
+    setNotes((prev) =>
+      prev.map((note) =>
+        note.id === id ? { ...note, content, timestamp: "Just updated" } : note
+      )
+    );
+
+    // TODO: Save to your backend/storage
+    console.log("Updating note:", id, content);
+  };
 
   const handleCompleteStep = () => {
-    // Save current notes before moving to next step
-    if (currentNotes.trim()) {
-      // TODO: Save notes to store
-      console.log("Saving notes:", currentNotes);
-    }
+    // Save notes before closing
     onNextStep();
-    setCurrentNotes(""); // Clear notes for next step
   };
 
   const handlePauseSession = () => {
-    // Save current notes before pausing
-    if (currentNotes.trim()) {
-      // TODO: Save notes to store
-      console.log("Saving notes:", currentNotes);
-    }
+    // Save notes before closing
     onClose();
   };
 
@@ -151,88 +163,13 @@ const FocusSession: React.FC<FocusSessionProps> = ({
         </Card>
 
         {/* Notes Section */}
-        <Card className="mb-8">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <h3 className="font-medium text-gray-900">Session Notes</h3>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowNotesArchive(!showNotesArchive)}
-                className="text-gray-500 hover:text-gray-700 text-xs"
-              >
-                <FileText className="w-3 h-3 mr-1" />
-                Previous Notes
-                {showNotesArchive ? (
-                  <ChevronUp className="w-3 h-3 ml-1" />
-                ) : (
-                  <ChevronDown className="w-3 h-3 ml-1" />
-                )}
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <textarea
-              value={currentNotes}
-              onChange={(e) => setCurrentNotes(e.target.value)}
-              placeholder="Capture thoughts, insights, or obstacles as you work on this step..."
-              className={cn(
-                "w-full min-h-[120px] p-3 border border-gray-200 rounded-md",
-                "text-sm leading-relaxed resize-none",
-                "placeholder:text-gray-400 text-gray-900",
-                "focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent",
-                "transition-all duration-200"
-              )}
-            />
-
-            {/* Notes Archive */}
-            <AnimatePresence initial={false}>
-              {showNotesArchive && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
-                  className="overflow-hidden "
-                >
-                  <Separator className="my-6" />
-                  <div className="space-y-3">
-                    <h4 className="text-xs font-medium text-gray-600 uppercase tracking-wide">
-                      Previous Session Notes
-                    </h4>
-                    {previousNotes.length > 0 ? (
-                      <div className="space-y-2">
-                        {previousNotes.map((note, index) => (
-                          <motion.div
-                            key={note.id}
-                            className="p-3 bg-gray-50 border border-gray-100 rounded-md"
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{
-                              delay: 0.15 + index * 0.05,
-                              duration: 0.2,
-                            }}
-                          >
-                            <div className="text-xs text-gray-500 mb-1">
-                              {note.timestamp}
-                            </div>
-                            <p className="text-sm text-gray-700 leading-relaxed">
-                              {note.content}
-                            </p>
-                          </motion.div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-sm text-gray-500 text-center py-4">
-                        No previous notes for this task
-                      </p>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </CardContent>
-        </Card>
+        <SessionNotes
+          currentStepId={step.id} // Assuming step has an id property
+          currentStepName={step.text}
+          notes={notes}
+          onCreateNote={handleCreateNote}
+          onUpdateNote={handleUpdateNote}
+        />
 
         {/* Action Buttons */}
         <div className="flex gap-3 justify-center">
