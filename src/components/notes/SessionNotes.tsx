@@ -1,17 +1,17 @@
 // src/components/notes/SessionNotes.tsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import QuickNoteInput from "./QuickNoteInput";
 import NotesGroup from "./NotesGroup";
-import type { SessionNote, NotesGroup as NotesGroupType } from "@/types/notes";
+import type { SessionNote } from "@/types/notes";
 import { motion } from "framer-motion";
+import { getAllSteps } from "@/lib/constants";
 
 interface SessionNotesProps {
   currentStepId: string;
-  currentStepName: string;
   notes: SessionNote[];
   onCreateNote: (content: string) => void;
   onUpdateNote: (id: string, content: string) => void;
@@ -19,7 +19,6 @@ interface SessionNotesProps {
 
 const SessionNotes: React.FC<SessionNotesProps> = ({
   currentStepId,
-  currentStepName,
   notes,
   onCreateNote,
   onUpdateNote,
@@ -27,15 +26,23 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasInput, setHasInput] = useState(false);
   const noteInputRef = useRef<HTMLTextAreaElement>(null);
+  const steps = getAllSteps(); // placeholder for future API call
+  const currentStep = steps.find((step) => step.id === currentStepId);
 
   // Group notes by current step vs other steps
-  const groupedNotes: NotesGroupType[] = React.useMemo(() => {
+  const groupedNotes = useMemo(() => {
     const currentStepNotes = notes.filter(
       (note) => note.stepId === currentStepId
     );
+
+    const currentTaskNotes = notes.filter((note) => {
+      const noteStep = steps.find((step) => step.id === note.stepId);
+      return noteStep?.taskId === currentStep?.taskId;
+    });
+
     const otherNotes = notes.filter((note) => note.stepId !== currentStepId);
 
-    const groups: NotesGroupType[] = [];
+    const groups = [];
 
     if (currentStepNotes.length > 0) {
       groups.push({
@@ -44,6 +51,16 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
           (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
         ),
         isCurrentStep: true,
+      });
+    }
+
+    if (currentTaskNotes.length > 0) {
+      groups.push({
+        title: "Other Steps in This Task",
+        notes: currentTaskNotes
+          .filter((note) => note.stepId !== currentStepId)
+          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
+        isCurrentStep: false,
       });
     }
 
@@ -58,7 +75,7 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
     }
 
     return groups;
-  }, [notes, currentStepId]);
+  }, [notes, currentStepId, steps, currentStep]);
 
   const totalNotesCount = notes.length;
 
@@ -131,7 +148,9 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
               groupedNotes.map((group, index) => (
                 <NotesGroup
                   key={`${group.title}-${index}`}
-                  group={group}
+                  title={group.title}
+                  notes={group.notes}
+                  isCurrentStep={group.isCurrentStep}
                   onUpdateNote={onUpdateNote}
                 />
               ))

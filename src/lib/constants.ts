@@ -165,3 +165,7 @@ export const getTaskSteps = (taskId: string): Step[] => {
 
   return mockSteps[taskId] || [];
 };
+
+export const getAllSteps = (): Step[] => {
+  return Object.values(mockTasks).flatMap((task) => getTaskSteps(task.id));
+};

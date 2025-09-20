@@ -97,7 +97,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
       ) : (
         <div
           className={cn(
-            "text-sm text-gray-700 leading-relaxed min-h-5 transition-all duration-300 ease-in-out overflow-hidden",
+            "text-sm text-gray-700 leading-relaxed min-h-5 transition-all duration-150 ease-in-out overflow-hidden",
             "line-clamp-2 max-h-10"
           )}
         >

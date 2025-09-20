@@ -1,33 +1,40 @@
 // src/components/notes/NotesGroup.tsx
 import React from "react";
 import NoteItem from "./NoteItem";
-import type { NotesGroup as NotesGroupType } from "@/types/notes";
+import type { SessionNote } from "@/types/notes";
 
 interface NotesGroupProps {
-  group: NotesGroupType;
+  title: string;
+  notes: SessionNote[];
+  isCurrentStep: boolean;
   onUpdateNote: (id: string, content: string) => void;
 }
 
-const NotesGroup: React.FC<NotesGroupProps> = ({ group, onUpdateNote }) => {
-  if (group.notes.length === 0) return null;
+const NotesGroup: React.FC<NotesGroupProps> = ({
+  title,
+  notes,
+  isCurrentStep,
+  onUpdateNote,
+}) => {
+  if (notes.length === 0) return null;
 
   return (
     <div className="mb-4 last:mb-0">
       <div className="flex items-center mb-2 text-xs font-semibold text-gray-700 uppercase tracking-wide">
         <div
           className={`w-1.5 h-1.5 rounded-full mr-2 ${
-            group.isCurrentStep ? "bg-blue-500" : "bg-gray-400"
+            isCurrentStep ? "bg-blue-500" : "bg-gray-400"
           }`}
         />
-        {group.title}
+        {title}
       </div>
       <div className="space-y-0">
-        {group.notes.map((note) => (
+        {notes.map((note) => (
           <NoteItem
             key={note.id}
             note={note}
             onUpdate={onUpdateNote}
-            isOtherTask={!group.isCurrentStep}
+            isOtherTask={!isCurrentStep}
           />
         ))}
       </div>

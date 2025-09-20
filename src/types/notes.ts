@@ -1,4 +1,4 @@
-import type { StepIdType } from "./tasks";
+import type { StepIdType, TaskIdType } from "./tasks";
 
 // src/types/notes.ts
 export interface SessionNote {
@@ -6,12 +6,7 @@ export interface SessionNote {
   content: string;
   timestamp: string;
   stepId: StepIdType;
+  taskId: TaskIdType; // Retrieved from step associated with the task
   stepName?: string;
   createdAt: Date;
-}
-
-export interface NotesGroup {
-  title: string;
-  notes: SessionNote[];
-  isCurrentStep: boolean;
 }
