@@ -29,7 +29,7 @@ const FocusSession: React.FC<FocusSessionProps> = ({
     {
       id: "n1",
       content:
-        "Competitor A charges $99/month but lacks advanced analytics. This could be our key differentiator.",
+        "Competitor A charges $99/month but lacks advanced analytics. This could be our key differentiator. Recommend highlighting this in our pricing page. How can we best showcase our analytics features?",
       timestamp: "2 minutes ago",
       stepId: step.id, // Assuming step has an id property
       createdAt: new Date(Date.now() - 2 * 60 * 1000),

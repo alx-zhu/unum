@@ -85,8 +85,10 @@ const NoteItem: React.FC<NoteItemProps> = ({
         onKeyDown={handleKeyDown}
         onInput={(e) => setContent(e.currentTarget.textContent || "")}
         className={cn(
-          "text-sm text-gray-700 leading-relaxed min-h-5 outline-none",
-          isEditing && "bg-white p-2 border border-gray-200 rounded"
+          "text-sm text-gray-700 leading-relaxed min-h-5 outline-none transition-all duration-100 ease-in-out overflow-ellipsis",
+          isEditing
+            ? "bg-white p-2 rounded max-h-96 -m-2"
+            : "line-clamp-2 max-h-10"
         )}
       >
         {content}
