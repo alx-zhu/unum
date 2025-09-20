@@ -1,6 +1,7 @@
 // src/components/notes/NoteItem.tsx
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
 import type { SessionNote } from "@/types/notes";
 
 interface NoteItemProps {
@@ -16,7 +17,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(note.content);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleClick = () => {
     if (!isEditing) {
@@ -42,16 +43,19 @@ const NoteItem: React.FC<NoteItemProps> = ({
     }
   };
 
-  useEffect(() => {
-    if (isEditing && contentRef.current) {
-      contentRef.current.focus();
+  const autoResizeTextarea = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = textarea.scrollHeight + "px";
+    }
+  };
 
-      // Select all text
-      const range = document.createRange();
-      range.selectNodeContents(contentRef.current);
-      const selection = window.getSelection();
-      selection?.removeAllRanges();
-      selection?.addRange(range);
+  useEffect(() => {
+    if (isEditing && textareaRef.current) {
+      textareaRef.current.focus();
+      textareaRef.current.select();
+      autoResizeTextarea();
     }
   }, [isEditing]);
 
@@ -77,22 +81,29 @@ const NoteItem: React.FC<NoteItemProps> = ({
           </>
         )}
       </div>
-      <div
-        ref={contentRef}
-        contentEditable={isEditing}
-        suppressContentEditableWarning={true}
-        onBlur={handleBlur}
-        onKeyDown={handleKeyDown}
-        onInput={(e) => setContent(e.currentTarget.textContent || "")}
-        className={cn(
-          "text-sm text-gray-700 leading-relaxed min-h-5 outline-none transition-all duration-100 ease-in-out overflow-ellipsis",
-          isEditing
-            ? "bg-white p-2 rounded max-h-96 -m-2"
-            : "line-clamp-2 max-h-10"
-        )}
-      >
-        {content}
-      </div>
+
+      {isEditing ? (
+        <Textarea
+          ref={textareaRef}
+          value={content}
+          onChange={(e) => {
+            setContent(e.target.value);
+            autoResizeTextarea();
+          }}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          className="text-sm text-gray-700 leading-relaxed min-h-5 resize-none border-0 p-0 shadow-none focus-visible:ring-0"
+        />
+      ) : (
+        <div
+          className={cn(
+            "text-sm text-gray-700 leading-relaxed min-h-5 transition-all duration-300 ease-in-out overflow-hidden",
+            "line-clamp-2 max-h-10"
+          )}
+        >
+          {content || "Click to add a note..."}
+        </div>
+      )}
     </div>
   );
 };
