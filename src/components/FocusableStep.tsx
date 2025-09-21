@@ -32,12 +32,13 @@ const FocusableStep: React.FC<FocusableStepProps> = ({
         "group/step transition-all duration-200 py-3 gap-0",
         {
           // Next step (primary focus) - matches your app's aesthetic
-          "border-gray-900 shadow-sm": isNext && !step.completed,
+          "border-gray-900 shadow-sm hover:shadow-md bg-white":
+            isNext && !step.completed,
           // Regular incomplete steps
-          "bg-gray-50 border-0 shadow-none hover:border-gray-300 hover:shadow-sm":
+          "bg-gray-50 border-0 shadow-none hover:border-gray-300 hover:bg-gray-100":
             !isNext && !step.completed,
           // Completed steps
-          "border-gray-100 bg-gray-50 opacity-75 border-none shadow-none":
+          "border-gray-100 bg-gray-50 opacity-75 border-none shadow-none hover:bg-gray-100":
             step.completed,
         },
         className
