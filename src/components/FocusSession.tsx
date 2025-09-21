@@ -1,11 +1,11 @@
 // src/components/FocusSession.tsx
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { X, Clock, CheckCircle2, Pause } from "lucide-react";
-import type { Task, Step } from "@/types/tasks";
-import { mockTasks } from "@/lib/constants";
+import type { Step } from "@/types/tasks";
+import { mockTasks, getNotesForStep, getCurrentSession } from "@/lib/constants";
 import { motion } from "framer-motion";
 import type { SessionNote } from "@/types/notes";
 import SessionNotes from "./notes/SessionNotes";
@@ -23,43 +23,30 @@ const FocusSession: React.FC<FocusSessionProps> = ({
   onNextStep,
   onCompleteTask,
 }) => {
-  const task: Task = mockTasks[5];
-  const [notes, setNotes] = useState<SessionNote[]>([
-    // Mock data - replace with your actual data source
-    {
-      id: "n1",
-      content:
-        "Competitor A charges $99/month but lacks advanced analytics. This could be our key differentiator. Recommend highlighting this in our pricing page. How can we best showcase our analytics features?",
-      timestamp: "2 minutes ago",
-      stepId: step.id, // Assuming step has an id property
-      createdAt: new Date(Date.now() - 2 * 60 * 1000),
-    },
-    {
-      id: "n2",
-      content:
-        "Found pricing page: https://competitor-a.com/pricing - need to analyze their tiers",
-      timestamp: "5 minutes ago",
-      stepId: step.id,
-      createdAt: new Date(Date.now() - 5 * 60 * 1000),
-    },
-    {
-      id: "n3",
-      content:
-        "Client mentioned they want aggressive timeline. Need to factor this into pricing strategy.",
-      timestamp: "Yesterday",
-      stepId: "s6-1", // Different step ID
-      stepName: "Client Discovery",
-      createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
-    },
-  ]);
+  // Find the task that corresponds to this step
+  const task = useMemo(() => {
+    return mockTasks.find((t) => t.id === step.taskId);
+  }, [step.taskId]);
 
-  // Add these handler functions:
+  // Get the current session
+  const currentSession = getCurrentSession();
+  console.log("Current session:", currentSession);
+
+  // Initialize notes with existing notes for this step
+  const [notes, setNotes] = useState<SessionNote[]>(() => {
+    const existingNotes = getNotesForStep(step.id);
+    return existingNotes.length > 0 ? existingNotes : [];
+  });
+
   const handleCreateNote = (content: string) => {
     const newNote: SessionNote = {
       id: `note-${Date.now()}`,
       content,
-      timestamp: "Just now",
-      stepId: step.id, // Current step ID
+      timestamp: new Date().toISOString(),
+      sessionId: currentSession?.id || Date.now(),
+      stepId: step.id,
+      taskId: step.taskId,
+      stepName: step.text,
       createdAt: new Date(),
     };
 
@@ -72,7 +59,9 @@ const FocusSession: React.FC<FocusSessionProps> = ({
   const handleUpdateNote = (id: string, content: string) => {
     setNotes((prev) =>
       prev.map((note) =>
-        note.id === id ? { ...note, content, timestamp: "Just updated" } : note
+        note.id === id
+          ? { ...note, content, timestamp: new Date().toISOString() }
+          : note
       )
     );
 
@@ -89,6 +78,24 @@ const FocusSession: React.FC<FocusSessionProps> = ({
     // Save notes before closing
     onClose();
   };
+
+  // If task is not found, show error state
+  if (!task) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Card>
+          <CardContent className="p-6">
+            <p className="text-red-600">
+              Error: Task not found for step {step.id}
+            </p>
+            <Button onClick={onClose} className="mt-4">
+              Close
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -163,9 +170,8 @@ const FocusSession: React.FC<FocusSessionProps> = ({
 
         {/* Notes Section */}
         <SessionNotes
-          currentStepId={step.id} // Assuming step has an id property
-          currentStepName={step.text}
           notes={notes}
+          sessionId={currentSession?.id || 0}
           onCreateNote={handleCreateNote}
           onUpdateNote={handleUpdateNote}
         />

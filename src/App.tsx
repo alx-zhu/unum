@@ -20,7 +20,7 @@ export default function App() {
     return (
       <FocusSession
         onClose={handleCloseFocus}
-        step={getTaskSteps("6")[3]}
+        step={getTaskSteps("1")[2]}
         onNextStep={() => {
           console.log("Moving to next step");
         }}

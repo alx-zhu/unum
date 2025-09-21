@@ -1,16 +1,16 @@
-// src/components/notes/NotesGroup.tsx
+// src/components/notes/SessionNotesGroup.tsx
 import React from "react";
-import NoteItem from "./NoteItem";
+import NoteItem from "./SessionNoteItem";
 import type { SessionNote } from "@/types/notes";
 
-interface NotesGroupProps {
+interface SessionNotesGroupProps {
   title: string;
   notes: SessionNote[];
   isCurrentStep: boolean;
   onUpdateNote: (id: string, content: string) => void;
 }
 
-const NotesGroup: React.FC<NotesGroupProps> = ({
+const SessionNotesGroup: React.FC<SessionNotesGroupProps> = ({
   title,
   notes,
   isCurrentStep,
@@ -42,4 +42,4 @@ const NotesGroup: React.FC<NotesGroupProps> = ({
   );
 };
 
-export default NotesGroup;
+export default SessionNotesGroup;
