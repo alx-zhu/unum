@@ -1,5 +1,11 @@
-import type { Step, Task, Session, Bucket } from "@/types/tasks";
-import type { SessionNote } from "@/types/notes";
+import type {
+  Step,
+  Task,
+  Session,
+  Bucket,
+  SessionNote,
+  SessionIdType,
+} from "@/types";
 
 export const buckets: Bucket[] = [
   {
@@ -337,6 +343,7 @@ export const mockSessions: Session[] = [
     wasCompleted: true,
     endingNote:
       "Thoroughly reviewed requirements. Found some clarifications needed but overall clear scope.",
+    pinnedNoteIds: new Set(["note-1", "note-2"]),
   },
   {
     id: 2,
@@ -347,6 +354,7 @@ export const mockSessions: Session[] = [
     wasCompleted: true,
     endingNote:
       "Created detailed timeline with buffer time for potential delays.",
+    pinnedNoteIds: new Set(["note-3"]),
   },
   {
     id: 3,
@@ -357,6 +365,7 @@ export const mockSessions: Session[] = [
     wasCompleted: true,
     endingNote:
       "Collected all performance metrics. Data looks promising for Q4 presentation.",
+    pinnedNoteIds: new Set(["note-4"]),
   },
   {
     id: 4,
@@ -365,6 +374,7 @@ export const mockSessions: Session[] = [
     startedAt: "2025-09-08T10:00:00Z",
     endedAt: "2025-09-08T12:15:00Z",
     wasCompleted: true,
+    pinnedNoteIds: new Set(),
   },
   {
     id: 5,
@@ -374,6 +384,7 @@ export const mockSessions: Session[] = [
     endedAt: "2025-08-10T21:30:00Z",
     wasCompleted: true,
     endingNote: "Great insights on habit formation. Taking notes as I read.",
+    pinnedNoteIds: new Set(["note-5"]),
   },
   {
     id: 6,
@@ -382,6 +393,7 @@ export const mockSessions: Session[] = [
     startedAt: "2025-08-20T19:30:00Z",
     endedAt: "2025-08-20T20:15:00Z",
     wasCompleted: true,
+    pinnedNoteIds: new Set(),
   },
   {
     id: 7,
@@ -392,6 +404,7 @@ export const mockSessions: Session[] = [
     wasCompleted: true,
     endingNote:
       "Found all receipts. Organized them by category for easier processing.",
+    pinnedNoteIds: new Set(),
   },
   {
     id: 8,
@@ -402,6 +415,7 @@ export const mockSessions: Session[] = [
     wasCompleted: true,
     endingNote:
       "Documentation audit complete. Found several outdated sections that need updating.",
+    pinnedNoteIds: new Set(["note-7"]),
   },
   {
     id: 9,
@@ -410,6 +424,7 @@ export const mockSessions: Session[] = [
     startedAt: "2025-07-20T17:00:00Z",
     endedAt: "2025-07-20T18:45:00Z",
     wasCompleted: true,
+    pinnedNoteIds: new Set(["note-8"]),
   },
 
   // Incomplete session (abandoned)
@@ -422,6 +437,7 @@ export const mockSessions: Session[] = [
     wasCompleted: false,
     endingNote:
       "Need to get more accurate cost estimates from vendors before finalizing budget.",
+    pinnedNoteIds: new Set(["note-6"]),
   },
 
   // Currently active session (no endedAt)
@@ -431,6 +447,7 @@ export const mockSessions: Session[] = [
     taskId: "1",
     startedAt: "2025-09-20T10:00:00Z",
     wasCompleted: false,
+    pinnedNoteIds: new Set(["note-11", "note-12"]),
   },
 ];
 
@@ -605,4 +622,8 @@ export const getNotesForTask = (taskId: string): SessionNote[] => {
 
 export const getCurrentSession = (): Session | null => {
   return mockSessions.find((session) => !session.endedAt) || null;
+};
+
+export const getSessionById = (sessionId: SessionIdType): Session | null => {
+  return mockSessions.find((session) => session.id === sessionId) || null;
 };

@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { X, Clock, CheckCircle2, Pause } from "lucide-react";
-import type { Step } from "@/types/tasks";
+import type { Step } from "@/types";
 import { mockTasks, getNotesForStep, getCurrentSession } from "@/lib/constants";
 import { motion } from "framer-motion";
-import type { SessionNote } from "@/types/notes";
-import SessionNotes from "./notes/SessionNotes";
+import type { SessionNote } from "@/types";
+import SessionNotes from "./SessionNotesV2";
 
 interface FocusSessionProps {
   step: Step;
@@ -56,17 +56,20 @@ const FocusSession: React.FC<FocusSessionProps> = ({
     console.log("Creating note:", newNote);
   };
 
-  const handleUpdateNote = (id: string, content: string) => {
+  const handleUpdateNote = (
+    id: string,
+    updates: { content?: string; title?: string }
+  ) => {
     setNotes((prev) =>
       prev.map((note) =>
         note.id === id
-          ? { ...note, content, timestamp: new Date().toISOString() }
+          ? { ...note, ...updates, timestamp: new Date().toISOString() }
           : note
       )
     );
 
     // TODO: Save to your backend/storage
-    console.log("Updating note:", id, content);
+    console.log("Updating note:", id, updates);
   };
 
   const handleCompleteStep = () => {

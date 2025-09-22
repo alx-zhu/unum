@@ -4,6 +4,8 @@ export type StepIdType = string;
 
 export type SessionIdType = number;
 
+export type NoteIdType = string;
+
 export type BucketIdType = "time-sensitive" | "important" | "when-available";
 
 export interface Bucket {
@@ -42,4 +44,17 @@ export interface Session {
   endedAt?: string;
   wasCompleted: boolean;
   endingNote?: string;
+  pinnedNoteIds: Set<NoteIdType>;
+}
+
+export interface SessionNote {
+  id: NoteIdType;
+  title?: string;
+  content: string;
+  timestamp: string;
+  sessionId: SessionIdType;
+  stepId: StepIdType; // Retrieved from the session associated with the task for faster access
+  taskId: TaskIdType; // Retrieved from step associated with the task
+  stepName?: string;
+  createdAt: Date;
 }

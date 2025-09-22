@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Play } from "lucide-react";
 import BucketSection from "@/components/BucketSection";
-import FocusSession from "./components/FocusSession";
+import FocusSession from "./components/session/FocusSession";
 import { mockTasks, getTaskSteps } from "@/lib/constants";
 
 export default function App() {

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Play, Clock, CheckCircle2, Pencil, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Step } from "@/types/tasks";
+import type { Step } from "@/types";
 
 interface FocusableStepProps {
   step: Step;

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus } from "lucide-react";
 import TaskCard from "@/components/TaskCard";
-import type { Task } from "@/types/tasks";
+import type { Task } from "@/types";
 
 const BucketSection: React.FC<{
   title: string;

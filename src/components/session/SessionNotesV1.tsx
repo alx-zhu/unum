@@ -5,10 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import QuickNoteInput from "./QuickNoteInput";
-import SessionNotesGroup from "./SessionNotesGroup";
-import type { SessionNote } from "@/types/notes";
+import NotesGroup from "./NotesGroup";
+import type { SessionNote } from "@/types";
 import { motion } from "framer-motion";
-import type { SessionIdType } from "@/types/tasks";
+import type { SessionIdType } from "@/types";
 
 interface SessionNotesProps {
   sessionId: SessionIdType;
@@ -94,7 +94,7 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
         <CardContent className="p-4">
           <div>
             {notes.length > 0 ? (
-              <SessionNotesGroup
+              <NotesGroup
                 title="Session Notes"
                 notes={notes}
                 isCurrentStep={true}
