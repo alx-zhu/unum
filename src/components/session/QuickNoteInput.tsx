@@ -1,10 +1,9 @@
 // src/components/notes/QuickNoteInput.tsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 interface QuickNoteInputProps {
-  ref: React.RefObject<HTMLTextAreaElement | null>;
   onSave: (content: string) => void;
   onInputChange: (hasContent: boolean) => void;
   placeholder?: string;
@@ -12,19 +11,33 @@ interface QuickNoteInputProps {
 }
 
 const QuickNoteInput: React.FC<QuickNoteInputProps> = ({
-  ref,
   onSave,
   onInputChange,
   placeholder = "Capture a quick thought...",
   autoFocus = false,
 }) => {
   const [content, setContent] = useState("");
+  const ref = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (autoFocus && ref.current) {
       ref.current.focus();
     }
   }, [autoFocus, ref]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      console.log(event.key, event.metaKey, event.ctrlKey);
+      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+        console.log("Focusing quick note input");
+        event.preventDefault();
+        ref.current?.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {

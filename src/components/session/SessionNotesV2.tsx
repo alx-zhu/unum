@@ -1,5 +1,5 @@
 // src/components/notes/SessionNotes.tsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import QuickNoteInput from "./QuickNoteInput";
@@ -25,28 +25,10 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
   onUpdateNote,
 }) => {
   const session = getSessionById(sessionId);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [pinnedNoteIds, setPinnedNoteIds] = useState<Set<NoteIdType>>(
     session?.pinnedNoteIds || new Set<NoteIdType>()
   );
-  const noteInputRef = useRef<HTMLTextAreaElement>(null);
   const totalNotesCount = notes.length;
-
-  // Keyboard shortcut for focus => move to QuickNoteInput
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      console.log(event.key, event.metaKey, event.ctrlKey);
-      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
-        console.log("Focusing quick note input");
-        event.preventDefault();
-        noteInputRef.current?.focus();
-        setIsExpanded(true);
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
 
   if (!session) {
     return <span>Session not found</span>;
@@ -90,10 +72,7 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
   return (
     <div className="space-y-6">
       <Card className="mb-8 overflow-hidden transition-all duration-300 ease-out p-0 gap-0">
-        <div
-          className="flex items-center justify-between p-4 border-b border-gray-100 bg-gray-50 cursor-pointer transition-colors hover:bg-gray-100"
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
+        <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gray-50 cursor-pointer transition-colors hover:bg-gray-100">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-gray-700">
               Session Notes
@@ -107,7 +86,6 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
         {/* Quick Input - Always Visible */}
         <div className="p-4 border-b border-gray-100 bg-white">
           <QuickNoteInput
-            ref={noteInputRef}
             onSave={onCreateNote}
             onInputChange={() => console.log("input changed")}
             autoFocus

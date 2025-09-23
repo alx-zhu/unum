@@ -148,7 +148,7 @@ const FocusSession: React.FC<FocusSessionProps> = ({
 
       {/* Main Content */}
       <motion.div
-        className="max-w-2xl mx-auto px-6 py-8"
+        className="max-w-4xl mx-auto px-6 py-8"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3, ease: "easeIn" }}
