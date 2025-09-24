@@ -205,7 +205,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
             onClick={handleTitleClick}
             className={cn(
               "text-sm font-medium cursor-text rounded px-1 py-0.5 -mx-1 transition-colors",
-              isPinned ? "hover:bg-amber-200" : "hover:bg-gray-100",
+              isPinned ? "hover:bg-amber-150" : "hover:bg-gray-100",
               hasTitle ? "text-gray-900" : "text-gray-400 italic"
             )}
           >
@@ -234,7 +234,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
             onClick={handleContentClick}
             className={cn(
               "text-sm text-gray-700 leading-relaxed cursor-text rounded px-1 py-0.5 -mx-1 transition-colors",
-              isPinned ? "hover:bg-amber-200" : "hover:bg-gray-100",
+              isPinned ? "hover:bg-amber-150" : "hover:bg-gray-100",
               // Line clamping for preview
               !isEditing && "line-clamp-3"
             )}
@@ -243,11 +243,11 @@ const NoteItem: React.FC<NoteItemProps> = ({
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex flex-col p-0 mt-2">
-        <span className="text-xs text-gray-500 text-right w-full truncate">
+      <CardFooter className="flex flex-col p-0 mt-3">
+        <span className="text-xs text-gray-400 text-right italic w-full truncate">
           {note.stepName && note.stepName}
         </span>
-        <span className="text-xs text-gray-400 text-right italic w-full truncate">
+        <span className="text-xs text-gray-400 text-right  w-full truncate">
           {note.createdAt
             ? `${formatDistanceToNow(new Date(note.createdAt), {
                 addSuffix: true,

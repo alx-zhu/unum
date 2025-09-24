@@ -101,7 +101,7 @@ const FocusSession: React.FC<FocusSessionProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-[110vh] bg-gray-50">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -148,7 +148,7 @@ const FocusSession: React.FC<FocusSessionProps> = ({
 
       {/* Main Content */}
       <motion.div
-        className="max-w-4xl mx-auto px-6 py-8"
+        className="max-w-3xl mx-auto py-8"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3, ease: "easeIn" }}
@@ -178,26 +178,26 @@ const FocusSession: React.FC<FocusSessionProps> = ({
           onCreateNote={handleCreateNote}
           onUpdateNote={handleUpdateNote}
         />
-
-        {/* Action Buttons */}
-        <div className="flex gap-3 justify-center">
-          <Button
-            variant="outline"
-            onClick={handlePauseSession}
-            className="flex items-center"
-          >
-            <Pause className="w-4 h-4 mr-2" />
-            Pause Session
-          </Button>
-          <Button
-            onClick={handleCompleteStep}
-            className="bg-gray-900 hover:bg-gray-800 text-white flex items-center"
-          >
-            <CheckCircle2 className="w-4 h-4 mr-2" />
-            Complete Step
-          </Button>
-        </div>
       </motion.div>
+
+      {/* Floating Action Buttons */}
+      <div className="flex items-center gap-3 fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 bg-white/10 backdrop-blur-xs rounded-2xl shadow-lg px-4 py-3">
+        <Button
+          variant="outline"
+          onClick={handlePauseSession}
+          className="flex items-center bg-white/70 border-none hover:bg-white hover:shadow-md backdrop-blur-sm shadow-sm transition-shadow"
+        >
+          <Pause className="w-4 h-4 mr-2" />
+          Pause Session
+        </Button>
+        <Button
+          onClick={handleCompleteStep}
+          className="bg-gray-900 hover:bg-gray-800 text-white flex items-center shadow-md hover:shadow-lg transition-all border-none"
+        >
+          <CheckCircle2 className="w-4 h-4 mr-2" />
+          Complete Step
+        </Button>
+      </div>
     </div>
   );
 };

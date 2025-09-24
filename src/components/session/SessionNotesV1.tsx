@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import QuickNoteInput from "./QuickNoteInput";
-import NotesGroup from "./NotesGroup";
+import NoteGrid from "./NoteGrid";
 import type { SessionNote } from "@/types";
 import { motion } from "framer-motion";
 import type { SessionIdType } from "@/types";
@@ -94,7 +94,7 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
         <CardContent className="p-4">
           <div>
             {notes.length > 0 ? (
-              <NotesGroup
+              <NoteGrid
                 title="Session Notes"
                 notes={notes}
                 isCurrentStep={true}

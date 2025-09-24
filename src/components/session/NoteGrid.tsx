@@ -1,9 +1,9 @@
-// src/components/notes/NotesGroup.tsx
+// src/components/notes/NoteGrid.tsx
 import React from "react";
 import NoteItem from "./NoteItem";
 import type { NoteIdType, SessionNote } from "@/types";
 
-interface NotesGroupProps {
+interface NoteGridProps {
   title: string;
   notes: SessionNote[];
   isCurrentStep?: boolean;
@@ -19,7 +19,7 @@ interface NotesGroupProps {
   indicatorColor?: "blue" | "green" | "amber" | "gray" | "indigo";
 }
 
-const NotesGroup: React.FC<NotesGroupProps> = ({
+const NoteGrid: React.FC<NoteGridProps> = ({
   title,
   notes,
   isCurrentStep = false,
@@ -71,4 +71,4 @@ const NotesGroup: React.FC<NotesGroupProps> = ({
   );
 };
 
-export default NotesGroup;
+export default NoteGrid;

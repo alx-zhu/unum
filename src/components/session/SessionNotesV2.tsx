@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import QuickNoteInput from "./QuickNoteInput";
 import type { NoteIdType, SessionNote } from "@/types";
 import type { SessionIdType } from "@/types";
-import NotesGroup from "./NotesGroup";
+import NoteGrid from "./NoteGrid";
 import { getSessionById } from "@/lib/constants";
 
 interface SessionNotesProps {
@@ -71,7 +71,7 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
 
   return (
     <div className="space-y-6">
-      <Card className="mb-8 overflow-hidden transition-all duration-300 ease-out p-0 gap-0">
+      <Card className="mb-10 overflow-hidden transition-all duration-300 ease-out p-0 gap-0">
         <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gray-50 cursor-pointer transition-colors hover:bg-gray-100">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-gray-700">
@@ -92,8 +92,9 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
           />
         </div>
       </Card>
+
       {/* Pinned Notes */}
-      <NotesGroup
+      <NoteGrid
         title="Pinned Notes"
         notes={pinnedNotes}
         onUpdateNote={onUpdateNote}
@@ -105,7 +106,7 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
       />
 
       {/* Current Session */}
-      <NotesGroup
+      <NoteGrid
         title="This Session"
         notes={currentSessionNotes}
         isCurrentStep={true}
@@ -117,7 +118,7 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
       />
 
       {/* Current Step (Previous Sessions) */}
-      <NotesGroup
+      <NoteGrid
         title="This Step (Previous Sessions)"
         notes={currentStepNotes}
         isCurrentStep={true}
@@ -129,7 +130,7 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
       />
 
       {/* Other Steps in This Task */}
-      <NotesGroup
+      <NoteGrid
         title="Other Steps in This Task"
         notes={otherStepNotes}
         isCurrentStep={false}
@@ -141,7 +142,7 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
       />
 
       {/* Other Tasks */}
-      <NotesGroup
+      <NoteGrid
         title="Other Tasks"
         notes={otherTaskNotes}
         isCurrentStep={false}
