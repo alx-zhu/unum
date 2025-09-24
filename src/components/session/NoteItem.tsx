@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Pin, PinOff } from "lucide-react";
 import type { SessionNote } from "@/types";
+import { formatDistanceToNow } from "date-fns";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 
 interface NoteItemProps {
   note: SessionNote;
@@ -141,13 +143,13 @@ const NoteItem: React.FC<NoteItemProps> = ({
   }, [isEditingTitle]);
 
   return (
-    <div
+    <Card
       className={cn(
         "group relative rounded-md border transition-all duration-150 cursor-pointer",
-        "hover:border-gray-300 hover:shadow-sm hover:-translate-y-0.5",
+        "hover:border-gray-300 hover:shadow-sm hover:-translate-y-0.5 gap-0 p-3",
 
         // Base styling based on context
-        isPinned && "border-amber-200 bg-amber-50",
+        isPinned && "border-amber-200 bg-amber-50 hover:border-amber-300",
         !isPinned &&
           isOtherTask &&
           "bg-gray-50 border-gray-200 opacity-85 hover:opacity-100 hover:bg-white",
@@ -180,52 +182,39 @@ const NoteItem: React.FC<NoteItemProps> = ({
         </Button>
       )}
 
-      <div className="p-3">
-        {/* Title Section - Hover Reveal */}
-        <div
-          className={cn(
-            "transition-all duration-200 ease-out overflow-hidden",
-            // Show title if it exists, or on hover, or when editing
-            hasTitle || isEditing
-              ? "max-h-8 opacity-100 mb-2"
-              : "max-h-0 opacity-0 group-hover:max-h-8 group-hover:opacity-100 group-hover:mb-2"
-          )}
-        >
-          {isEditingTitle ? (
-            <Input
-              ref={titleInputRef}
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              onBlur={saveTitle}
-              onKeyDown={handleTitleKeyDown}
-              placeholder="Add title..."
-              className="h-6 text-sm font-medium border-0 px-1 py-0 shadow-none focus-visible:ring-1 focus-visible:ring-gray-900/20"
-            />
-          ) : (
-            <div
-              onClick={handleTitleClick}
-              className={cn(
-                "text-sm font-medium cursor-text rounded px-1 py-0.5 -mx-1 transition-colors",
-                "hover:bg-gray-100",
-                hasTitle ? "text-gray-900" : "text-gray-400 italic"
-              )}
-            >
-              {hasTitle ? note.title : "Add title..."}
-            </div>
-          )}
-        </div>
+      <CardHeader
+        className={cn(
+          "transition-all duration-200 ease-out p-0",
+          hasTitle || isEditing
+            ? "max-h-8 opacity-100"
+            : "max-h-0 opacity-0 group-hover:max-h-8 group-hover:opacity-100"
+        )}
+      >
+        {isEditingTitle ? (
+          <Input
+            ref={titleInputRef}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            onBlur={saveTitle}
+            onKeyDown={handleTitleKeyDown}
+            placeholder="Add title..."
+            className="h-6 text-sm font-medium border-0 p-0 shadow-none focus-visible:ring-0  rounded"
+          />
+        ) : (
+          <div
+            onClick={handleTitleClick}
+            className={cn(
+              "text-sm font-medium cursor-text rounded px-1 py-0.5 -mx-1 transition-colors",
+              isPinned ? "hover:bg-amber-200" : "hover:bg-gray-100",
+              hasTitle ? "text-gray-900" : "text-gray-400 italic"
+            )}
+          >
+            {hasTitle ? note.title : "Add title..."}
+          </div>
+        )}
+      </CardHeader>
 
-        {/* Metadata */}
-        <div className="flex items-center gap-2 mb-2 text-xs text-gray-500">
-          <span>{note.timestamp}</span>
-          {note.stepName && (
-            <>
-              <span>•</span>
-              <span className="truncate">{note.stepName}</span>
-            </>
-          )}
-        </div>
-
+      <CardContent className="p-0">
         {/* Content */}
         {isEditingContent ? (
           <Textarea
@@ -245,7 +234,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
             onClick={handleContentClick}
             className={cn(
               "text-sm text-gray-700 leading-relaxed cursor-text rounded px-1 py-0.5 -mx-1 transition-colors",
-              "hover:bg-gray-100",
+              isPinned ? "hover:bg-amber-200" : "hover:bg-gray-100",
               // Line clamping for preview
               !isEditing && "line-clamp-3"
             )}
@@ -253,8 +242,20 @@ const NoteItem: React.FC<NoteItemProps> = ({
             {content || "Click to add content..."}
           </div>
         )}
-      </div>
-    </div>
+      </CardContent>
+      <CardFooter className="flex flex-col p-0 mt-2">
+        <span className="text-xs text-gray-500 text-right w-full truncate">
+          {note.stepName && note.stepName}
+        </span>
+        <span className="text-xs text-gray-400 text-right italic w-full truncate">
+          {note.createdAt
+            ? `${formatDistanceToNow(new Date(note.createdAt), {
+                addSuffix: true,
+              })}`
+            : "Just now"}
+        </span>
+      </CardFooter>
+    </Card>
   );
 };
 
