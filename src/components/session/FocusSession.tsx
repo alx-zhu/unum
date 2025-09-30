@@ -9,6 +9,7 @@ import { mockTasks, getNotesForStep, getCurrentSession } from "@/lib/constants";
 import { motion } from "framer-motion";
 import type { SessionNote } from "@/types";
 import SessionNotes from "./SessionNotesV2";
+import SessionSummaryModal from "./SessionSummaryModal";
 
 interface FocusSessionProps {
   step: Step;
@@ -75,12 +76,40 @@ const FocusSession: React.FC<FocusSessionProps> = ({
   const handleCompleteStep = () => {
     // Save notes before closing
     onNextStep();
+    setShowSummaryModal(true);
   };
 
   const handlePauseSession = () => {
     // Save notes before closing
     onClose();
+    setShowSummaryModal(true);
   };
+
+  // Session Summary helpers
+  const [showSummaryModal, setShowSummaryModal] = useState(false);
+  const [sessionStartTime] = useState(new Date().toISOString());
+
+  const handleSaveSummary = (data: {
+    sessionTitle: string;
+    commitMessage: string;
+  }) => {
+    // TODO: Save session data to your backend
+    console.log("Session summary:", data);
+
+    // Close modal and continue with original flow
+    setShowSummaryModal(false);
+    onNextStep();
+  };
+
+  const handleCloseSummary = () => {
+    setShowSummaryModal(false);
+    onClose();
+  };
+
+  // Calculate session duration
+  const sessionDuration = Math.round(
+    (Date.now() - new Date(sessionStartTime).getTime()) / (1000 * 60)
+  );
 
   // If task is not found, show error state
   if (!task) {
@@ -198,6 +227,17 @@ const FocusSession: React.FC<FocusSessionProps> = ({
           Complete Step
         </Button>
       </div>
+
+      <SessionSummaryModal
+        isOpen={showSummaryModal}
+        onClose={handleCloseSummary}
+        onSave={handleSaveSummary}
+        step={step}
+        task={task}
+        sessionNotes={notes}
+        sessionDuration={sessionDuration}
+        sessionStartTime={sessionStartTime}
+      />
     </div>
   );
 };

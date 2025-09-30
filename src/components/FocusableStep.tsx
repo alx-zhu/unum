@@ -5,15 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Play, Clock, CheckCircle2, Pencil, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Step } from "@/types";
+import type { Step, StepIdType } from "@/types";
 
 interface FocusableStepProps {
   step: Step;
   isNext: boolean; // First incomplete step
-  onFocus: (stepId: string) => void;
-  onToggleComplete: (stepId: string) => void;
-  onEdit: (stepId: string) => void;
-  onDelete: (stepId: string) => void;
+  onFocus: (stepId: StepIdType) => void;
+  onToggleComplete: (stepId: StepIdType) => void;
+  onEdit: (stepId: StepIdType, newText: string) => void;
+  onDelete: (stepId: StepIdType) => void;
   className?: string;
 }
 
@@ -115,7 +115,7 @@ const FocusableStep: React.FC<FocusableStepProps> = ({
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => onEdit(step.id)}
+                onClick={() => console.log("Start editing", step.id)}
                 className="h-7 w-7 hover:bg-gray-100"
                 title="Edit step"
               >

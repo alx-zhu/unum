@@ -58,3 +58,15 @@ export interface SessionNote {
   stepName?: string;
   createdAt: Date;
 }
+
+export interface SessionSummary {
+  id: string;
+  sessionTitle: string;
+  commitMessage: string;
+  duration: number;
+  startTime: string;
+  endTime: string;
+  stepId: string;
+  taskId: string;
+  notesCount: number;
+}

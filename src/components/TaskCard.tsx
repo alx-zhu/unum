@@ -27,6 +27,7 @@ import { DueDateBadge } from "./DueDateBadge";
 import { getTaskSteps } from "@/lib/constants";
 import FocusableStep from "./FocusableStep";
 import { Input } from "./ui/input";
+import type { Step } from "@/types";
 
 interface Task {
   id: string;
@@ -40,8 +41,6 @@ interface TaskCardProps {
   onMoveUp?: () => void;
   onMoveDown?: () => void;
   onSelect?: () => void;
-  onEdit?: () => void;
-  onDelete?: () => void;
   canMoveUp: boolean;
   canMoveDown: boolean;
   showActions?: boolean;
@@ -52,8 +51,6 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   onMoveUp,
   onMoveDown,
   onSelect,
-  onEdit,
-  onDelete,
   canMoveUp,
   canMoveDown,
   showActions = true,
@@ -61,16 +58,25 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [showActionsMenu, setShowActionsMenu] = useState(false);
   const [newStep, setNewStep] = useState("");
+  const [steps, setSteps] = useState(getTaskSteps(task.id));
 
-  const taskSteps = getTaskSteps(task.id);
-  const completedSteps = taskSteps.filter((step) => step.completed).length;
-  const hasSteps = taskSteps.length > 0;
+  const completedSteps = steps.filter((step) => step.completed).length;
+  const hasSteps = steps.length > 0;
 
   const handleAddStep = () => {
     if (newStep.trim()) {
       // TODO: Connect to Redux store to add step
       console.log("Adding step to task", task.id, ":", newStep);
       setNewStep("");
+
+      const newStepObj: Step = {
+        id: `${task.id}-step-${steps.length + 1}`,
+        text: newStep.trim(),
+        createdAt: new Date().toISOString(),
+        completed: false,
+        taskId: task.id,
+      };
+      setSteps([...steps, newStepObj]);
     }
   };
 
@@ -87,14 +93,20 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     console.log("Toggling step completion:", stepId);
   };
 
-  const handleEdit = () => {
-    setShowActionsMenu(false);
-    onEdit?.();
+  const handleEdit = (stepId: string, newText: string) => {
+    // TODO: Connect to Redux store to edit step
+    console.log("Editing step:", stepId, "New text:", newText);
+    setSteps(
+      steps.map((step) =>
+        step.id === stepId ? { ...step, text: newText } : step
+      )
+    );
   };
 
-  const handleDelete = () => {
-    setShowActionsMenu(false);
-    onDelete?.();
+  const handleDelete = (stepId: string) => {
+    // TODO: Connect to Redux store to delete step
+    console.log("Deleting step:", stepId);
+    setSteps(steps.filter((step) => step.id !== stepId));
   };
 
   return (
@@ -159,7 +171,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                       </span>
                       {hasSteps && (
                         <Badge variant="secondary" className="text-xs">
-                          {completedSteps}/{taskSteps.length}
+                          {completedSteps}/{steps.length}
                         </Badge>
                       )}
                     </div>
@@ -172,7 +184,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.15, duration: 0.2 }}
                       >
-                        {taskSteps.map((step, index) => {
+                        {steps.map((step, index) => {
                           const isNext =
                             index === completedSteps && !step.completed;
                           return (
