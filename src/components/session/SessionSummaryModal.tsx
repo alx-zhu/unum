@@ -5,6 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import type { Step, SessionNote, Task } from "@/types";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface SessionSummaryModalProps {
   isOpen: boolean;
@@ -129,30 +135,40 @@ const SessionSummaryModal: React.FC<SessionSummaryModalProps> = ({
           </div>
 
           {/* Notes Section */}
-          <div className="pt-6 border-t border-[#f0f0f0] mb-6">
-            <label className="block text-[11px] font-semibold text-[#666] uppercase tracking-[0.5px] mb-3">
-              Session Notes ({sessionNotes.length})
-            </label>
-            {sessionNotes.length > 0 ? (
-              <div className="grid gap-2">
-                {sessionNotes.map((note) => (
-                  <div
-                    key={note.id}
-                    className="bg-[#fffbf0] border border-[#ffe9b3] rounded-md px-3 py-2.5 text-[13px] text-[#4a3900]"
-                  >
-                    {note.title && (
-                      <span className="font-semibold mr-1">{note.title}:</span>
-                    )}
-                    <span className="line-clamp-2">{note.content}</span>
+          <Accordion
+            type="single"
+            collapsible
+            className="py-3 border-t border-[#f0f0f0]"
+          >
+            <AccordionItem value="notes">
+              <AccordionTrigger className="text-[11px] font-semibold text-[#666] uppercase tracking-[0.5px] hover:bg-accent transition-all rounded-b-md px-2 mb-2">
+                Session Notes ({sessionNotes.length})
+              </AccordionTrigger>
+              <AccordionContent>
+                {sessionNotes.length > 0 ? (
+                  <div className="grid gap-2 overflow-auto max-h-48">
+                    {sessionNotes.map((note) => (
+                      <div
+                        key={note.id}
+                        className="bg-[#fffbf0] border border-[#ffe9b3] rounded-md px-3 py-2.5 text-[13px] text-[#4a3900]"
+                      >
+                        {note.title && (
+                          <span className="font-semibold mr-1">
+                            {note.title}:
+                          </span>
+                        )}
+                        <span className="line-clamp-2">{note.content}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-[13px] text-[#999] italic text-center py-4">
-                No notes captured during this session
-              </div>
-            )}
-          </div>
+                ) : (
+                  <div className="text-[13px] text-[#999] italic text-center py-4">
+                    No notes captured during this session
+                  </div>
+                )}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
 
           {/* Actions */}
           <div className="flex gap-3">

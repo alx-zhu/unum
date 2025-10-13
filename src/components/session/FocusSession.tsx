@@ -103,7 +103,6 @@ const FocusSession: React.FC<FocusSessionProps> = ({
 
   const handleCloseSummary = () => {
     setShowSummaryModal(false);
-    onClose();
   };
 
   // Calculate session duration

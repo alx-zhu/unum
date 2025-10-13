@@ -91,6 +91,20 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   const toggleStepCompletion = (stepId: string) => {
     // TODO: Connect to Redux store to toggle step completion
     console.log("Toggling step completion:", stepId);
+    setSteps((prevSteps) =>
+      prevSteps.map((step) =>
+        step.id === stepId
+          ? {
+              ...step,
+              completed: !step.completed,
+              completedAt: !step.completed
+                ? new Date().toISOString()
+                : undefined,
+              updatedAt: new Date().toISOString(),
+            }
+          : step
+      )
+    );
   };
 
   const handleEdit = (stepId: string, newText: string) => {
@@ -204,12 +218,8 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                                   // TODO: Navigate to step focus mode
                                   console.log("Focusing on step:", stepId);
                                 }}
-                                onEdit={() =>
-                                  console.log("Editing step:", step.id)
-                                }
-                                onDelete={() =>
-                                  console.log("Deleting step:", step.id)
-                                }
+                                onEdit={() => handleEdit(step.id, step.text)}
+                                onDelete={() => handleDelete(step.id)}
                                 onToggleComplete={toggleStepCompletion}
                               />
                             </motion.div>
