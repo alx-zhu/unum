@@ -105,7 +105,7 @@ const SessionSummaryModal: React.FC<SessionSummaryModalProps> = ({
           </div>
 
           {/* Stats Section */}
-          <div className="bg-[#fafafa] rounded-lg p-4 mb-6">
+          <div className="bg-gray-50 rounded-lg p-4 mb-6">
             <div className="grid grid-cols-3 gap-4 text-center">
               <div className="flex flex-col gap-1">
                 <div className="text-[18px] font-semibold text-[#1a1a1a]">
@@ -141,7 +141,7 @@ const SessionSummaryModal: React.FC<SessionSummaryModalProps> = ({
             className="py-3 border-t border-[#f0f0f0]"
           >
             <AccordionItem value="notes">
-              <AccordionTrigger className="text-[11px] font-semibold text-[#666] uppercase tracking-[0.5px] hover:bg-accent transition-all rounded-b-md px-2 mb-2">
+              <AccordionTrigger className="text-[11px] font-semibold text-[#666] uppercase tracking-[0.5px] hover:bg-gray-50 transition-all rounded-b-md px-2 mb-2">
                 Session Notes ({sessionNotes.length})
               </AccordionTrigger>
               <AccordionContent>
