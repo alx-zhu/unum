@@ -85,11 +85,7 @@ const SessionNotes: React.FC<SessionNotesProps> = ({
 
         {/* Quick Input - Always Visible */}
         <div className="p-4 border-b border-gray-100 bg-white">
-          <QuickNoteInput
-            onSave={onCreateNote}
-            onInputChange={() => console.log("input changed")}
-            autoFocus
-          />
+          <QuickNoteInput onSave={onCreateNote} autoFocus />
         </div>
       </Card>
 

@@ -5,14 +5,12 @@ import { cn } from "@/lib/utils";
 
 interface QuickNoteInputProps {
   onSave: (content: string) => void;
-  onInputChange: (hasContent: boolean) => void;
   placeholder?: string;
   autoFocus?: boolean;
 }
 
 const QuickNoteInput: React.FC<QuickNoteInputProps> = ({
   onSave,
-  onInputChange,
   placeholder = "Capture a quick thought...",
   autoFocus = false,
 }) => {
@@ -27,9 +25,7 @@ const QuickNoteInput: React.FC<QuickNoteInputProps> = ({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      console.log(event.key, event.metaKey, event.ctrlKey);
       if ((event.metaKey || event.ctrlKey) && event.key === "k") {
-        console.log("Focusing quick note input");
         event.preventDefault();
         ref.current?.focus();
       }
@@ -49,7 +45,6 @@ const QuickNoteInput: React.FC<QuickNoteInputProps> = ({
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newContent = event.target.value;
     setContent(newContent);
-    onInputChange(newContent.trim().length > 0);
 
     // Auto-resize
     const textarea = event.target;
@@ -62,7 +57,6 @@ const QuickNoteInput: React.FC<QuickNoteInputProps> = ({
     if (trimmedContent) {
       onSave(trimmedContent);
       setContent("");
-      onInputChange(false);
 
       // Reset height
       if (ref.current) {

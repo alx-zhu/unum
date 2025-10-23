@@ -107,16 +107,6 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     );
   };
 
-  const handleEdit = (stepId: string, newText: string) => {
-    // TODO: Connect to Redux store to edit step
-    console.log("Editing step:", stepId, "New text:", newText);
-    setSteps(
-      steps.map((step) =>
-        step.id === stepId ? { ...step, text: newText } : step
-      )
-    );
-  };
-
   const handleDelete = (stepId: string) => {
     // TODO: Connect to Redux store to delete step
     console.log("Deleting step:", stepId);
@@ -218,7 +208,6 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                                   // TODO: Navigate to step focus mode
                                   console.log("Focusing on step:", stepId);
                                 }}
-                                onEdit={() => handleEdit(step.id, step.text)}
                                 onDelete={() => handleDelete(step.id)}
                                 onToggleComplete={toggleStepCompletion}
                               />

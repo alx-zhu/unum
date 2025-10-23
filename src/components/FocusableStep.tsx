@@ -12,7 +12,6 @@ interface FocusableStepProps {
   isNext: boolean; // First incomplete step
   onFocus: (stepId: StepIdType) => void;
   onToggleComplete: (stepId: StepIdType) => void;
-  onEdit: (stepId: StepIdType, newText: string) => void;
   onDelete: (stepId: StepIdType) => void;
   className?: string;
 }
@@ -22,7 +21,6 @@ const FocusableStep: React.FC<FocusableStepProps> = ({
   isNext,
   onFocus,
   onToggleComplete,
-  onEdit,
   onDelete,
   className,
 }) => {
